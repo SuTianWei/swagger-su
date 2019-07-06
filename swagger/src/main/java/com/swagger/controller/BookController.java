@@ -1,16 +1,14 @@
 package com.swagger.controller;
 
-import com.sun.org.apache.regexp.internal.RE;
 import com.swagger.Entity.Book;
 import com.swagger.Entity.Publisher;
 import com.swagger.service.BookService;
-import com.swagger.service.impl.BookServiceImpl;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Id;
 import java.util.List;
 
 @RestController
@@ -35,12 +33,12 @@ public class BookController {
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     @ApiOperation(value = "add book details")
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
-        Book bookresponse = bookService.save(book);
-        return new ResponseEntity<>(bookresponse, HttpStatus.CREATED);
+        Book book1 = bookService.save(book);
+        return new ResponseEntity<>(book, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @ApiOperation(value = "get book  by id")
+    @ApiOperation(value = "按照id查看书籍")
     public ResponseEntity<List<Book>> getBook(@RequestParam int id) {
         Book books = bookService.getBookById(id);
         if (books != null) {
@@ -49,15 +47,6 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    @ApiOperation(value = "更新一个")
-    public ResponseEntity<Book> updateById(@RequestBody Book book) {
-        Book books = bookService.updateById(book);
-        if (books != null) {
-            return new ResponseEntity(books, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ApiOperation(value = "按照Id删除图书")
@@ -69,5 +58,19 @@ public class BookController {
         bookService.deleteById(id);
         return new ResponseEntity<>("Successfully Deleted. ", HttpStatus.OK);
     }
+
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @ApiOperation(value = "更新书籍按照id")
+    public ResponseEntity<?> update(@RequestBody Book book, @RequestParam int id) {
+        Book book1 = bookService.getBookById(id);
+        if (book == null) {
+            return new ResponseEntity<>("book Not Exist. ", HttpStatus.BAD_REQUEST);
+        }
+        book.setId(id);
+        Book book2 = bookService.save(book);
+        return new ResponseEntity<>(book, HttpStatus.CREATED);
+    }
+
 }
 

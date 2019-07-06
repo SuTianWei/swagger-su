@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/*
+ * 阿伟
+ *
+ * */
 @Transactional
 @Service("bookService")
 public class BookServiceImpl implements BookService {
@@ -33,16 +37,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book getBookById(int id) {
         return bookRepository.findOne(id);
+
     }
 
-    @Override
-    public void updateById(int  id) {
-      bookRepository.flush();
-    }
 
-    /**
-     * @param id
-     */
     @Override
     public void deleteById(int id) {
         bookRepository.delete(id);
